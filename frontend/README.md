@@ -2,7 +2,11 @@
 
 Boot AI is a ChatGPT-style chatbot web app. This folder holds the **frontend** (the part you see in the browser), built with **React**, **TypeScript** and **Vite**.
 
+<<<<<<< HEAD
 > **Note:** The chat gets its replies from the Python backend in the `backend/` folder. Start the backend first (see `backend/README.md`), or the bot will say it couldn't reach the server. The backend uses simple fixed replies for now; an AI model comes later.
+=======
+> **Note:** The frontend is not connected to a backend yet. When you send a message, the bot answers with a placeholder reply. The Python backend will provide real answers later.
+>>>>>>> 4dce147a36daa28d3b2697523248f1355ef5f40a
 
 ---
 
@@ -12,7 +16,11 @@ Boot AI is a ChatGPT-style chatbot web app. This folder holds the **frontend** (
 |---|---|
 | **Chat window** | Type a message and press **Enter** to send. **Shift + Enter** adds a new line. |
 | **Suggestions** | On an empty chat, click a suggestion such as "Debug my code" to start quickly. |
+<<<<<<< HEAD
 | **Typing indicator** | Shows that Boot AI is "typing" while it waits for the backend's reply. |
+=======
+| **Typing indicator** | Shows that Boot AI is "typing" while it prepares a reply. |
+>>>>>>> 4dce147a36daa28d3b2697523248f1355ef5f40a
 | **New chat** | Click **New chat** in the sidebar to start a fresh conversation. |
 | **Recent chats** | The sidebar lists your past chats, newest first. Click one to reopen it. The first message becomes the chat title. |
 | **Delete chat** | Delete a chat from the sidebar. A confirm popup asks before deleting. |
@@ -34,11 +42,17 @@ frontend/
 └── src/
     ├── main.tsx            # Starting point – loads <App />
     ├── App.tsx             # Main layout: sidebar + chat + popups
+<<<<<<< HEAD
     ├── api/
     │   └── chatApi.ts          # Sends messages to the backend (POST /api/chat)
     ├── chat/
     │   ├── chat.tsx            # Chat screen: messages, input box, suggestions
     │   └── useConversations.ts # Stores chats, gets replies from the backend, saves to localStorage
+=======
+    ├── chat/
+    │   ├── chat.tsx            # Chat screen: messages, input box, suggestions
+    │   └── useConversations.ts # Stores chats, sends messages, saves to localStorage
+>>>>>>> 4dce147a36daa28d3b2697523248f1355ef5f40a
     ├── sidebar/
     │   └── sidebar.tsx         # Left menu: new chat, recent chats, profile
     ├── login/
@@ -121,6 +135,7 @@ When you save a code change, the page updates by itself. To stop the server, pre
 
 ---
 
+<<<<<<< HEAD
 ## Backend address
 
 By default the frontend calls the backend at `http://localhost:8000`.
@@ -131,3 +146,14 @@ VITE_API_URL=http://<public-ip>:8000
 ```
 
 Restart `npm run dev` (or run `npm run build` again) after changing `.env`.
+=======
+## Next step: connect the backend
+
+The placeholder reply lives in `src/chat/useConversations.ts`, inside the `sendMessage` function. Look for the comment:
+
+```ts
+// UI only — replace this with a call to your chatbot API
+```
+
+When the backend is ready, replace that timer with a `fetch()` call to the backend API, and show its answer as the bot message.
+>>>>>>> 4dce147a36daa28d3b2697523248f1355ef5f40a
