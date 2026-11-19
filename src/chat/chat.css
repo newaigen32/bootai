@@ -1,0 +1,249 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Empty state: heading + composer centered ---------- */
+.chat-empty {
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.chat-empty h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+
+.chat-empty .composer {
+  width: 100%;
+  max-width: 720px;
+}
+
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 720px;
+}
+
+.suggestion {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid #3a3a3f;
+  border-radius: 999px;
+  color: #b4b4bb;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.suggestion:hover {
+  background-color: #2f2f33;
+  color: #fff;
+}
+
+/* ---------- Composer ---------- */
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 12px 10px 16px;
+  box-sizing: border-box;
+  background-color: #2f2f33;
+  border: 1px solid #3a3a3f;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.15s;
+}
+
+.composer:focus-within {
+  border-color: #55555d;
+}
+
+.composer-input {
+  width: 100%;
+  min-height: 24px;
+  padding: 4px 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: #ececec;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.composer-input::placeholder {
+  color: #8e8e93;
+}
+
+.composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.composer-icon {
+  display: flex;
+  padding: 7px;
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  color: #b4b4bb;
+  cursor: pointer;
+}
+
+.composer-icon:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.composer-send {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background-color: #ececec;
+  border: none;
+  border-radius: 999px;
+  color: #171717;
+  cursor: pointer;
+  transition: background-color 0.15s, opacity 0.15s;
+}
+
+.composer-send:hover:not(:disabled) {
+  background-color: #fff;
+}
+
+.composer-send:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ---------- Conversation ---------- */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 16px 16px;
+  box-sizing: border-box;
+}
+
+.message {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message-bubble {
+  max-width: 80%;
+  font-size: 15px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.message.user .message-bubble {
+  padding: 10px 16px;
+  background-color: #2f2f33;
+  border-radius: 20px;
+}
+
+.message.bot .message-bubble {
+  padding-top: 3px;
+}
+
+.bot-avatar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6d6dff 0%, #a855f7 100%);
+  color: #fff;
+}
+
+.typing {
+  display: flex;
+  gap: 4px;
+  padding-top: 12px;
+}
+
+.typing span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #8e8e93;
+  animation: typing-bounce 1.2s infinite ease-in-out;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* ---------- Footer (composer pinned at bottom) ---------- */
+.chat-footer {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 16px 12px;
+  box-sizing: border-box;
+}
+
+.chat-disclaimer {
+  margin: 8px 0 0;
+  color: #8e8e93;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* ---------- Keyboard focus ---------- */
+.suggestion:focus-visible,
+.composer-icon:focus-visible,
+.composer-send:focus-visible {
+  outline: 2px solid #7c7cff;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing span {
+    animation: none;
+  }
+}

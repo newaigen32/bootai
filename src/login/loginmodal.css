@@ -1,0 +1,336 @@
+/* ---------- Header ---------- */
+.auth-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 22px;
+  text-align: center;
+}
+
+.auth-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6d6dff 0%, #a855f7 100%);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(124, 92, 255, 0.35);
+}
+
+.auth-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.auth-subtitle {
+  margin: 6px 0 0;
+  color: #9a9aa2;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ---------- Google ---------- */
+.google-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 46px;
+  background-color: #fff;
+  border: none;
+  border-radius: 12px;
+  color: #1f1f1f;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s;
+}
+
+.google-button:hover {
+  background-color: #f1f1f4;
+}
+
+.google-button:active {
+  transform: scale(0.99);
+}
+
+/* ---------- Divider ---------- */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 16px;
+  color: #7a7a82;
+  font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ---------- Email / Phone segmented control ---------- */
+.segmented {
+  position: relative;
+  display: flex;
+  padding: 4px;
+  margin-bottom: 14px;
+  background-color: #1a1a1d;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+}
+
+.segmented-thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background-color: #34343a;
+  border-radius: 9px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.segmented-thumb.right {
+  transform: translateX(100%);
+}
+
+.segment {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: #8e8e93;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.segment.active {
+  color: #fff;
+}
+
+/* ---------- Form ---------- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.field-icon {
+  position: absolute;
+  left: 14px;
+  color: #7a7a82;
+  pointer-events: none;
+  transition: color 0.15s;
+}
+
+.field input {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px 0 42px;
+  box-sizing: border-box;
+  background-color: #1a1a1d;
+  border: 1px solid #38383e;
+  border-radius: 12px;
+  color: #ececec;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field input::placeholder {
+  color: #6e6e76;
+}
+
+.field input:focus {
+  border-color: #7c7cff;
+  box-shadow: 0 0 0 3px rgba(124, 124, 255, 0.2);
+}
+
+.field:focus-within .field-icon {
+  color: #a5a5ff;
+}
+
+.field input[readonly] {
+  color: #9a9aa2;
+}
+
+.field-action {
+  position: absolute;
+  right: 8px;
+  display: flex;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: #7a7a82;
+  cursor: pointer;
+}
+
+.field-action:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.field:has(.field-action) input {
+  padding-right: 44px;
+}
+
+.field-hint,
+.otp-hint {
+  margin: -2px 2px 0;
+  color: #7a7a82;
+  font-size: 12px;
+}
+
+/* ---------- Phone ---------- */
+.phone-row {
+  display: flex;
+  gap: 8px;
+}
+
+.country-select {
+  flex: 0 0 auto;
+  height: 46px;
+  padding: 0 10px;
+  background-color: #1a1a1d;
+  border: 1px solid #38383e;
+  border-radius: 12px;
+  color: #ececec;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+}
+
+.country-select:focus {
+  border-color: #7c7cff;
+  box-shadow: 0 0 0 3px rgba(124, 124, 255, 0.2);
+}
+
+.country-select:disabled {
+  color: #9a9aa2;
+  cursor: default;
+}
+
+.otp-input {
+  letter-spacing: 0.5em;
+  font-weight: 600;
+}
+
+.otp-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ---------- Links ---------- */
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: #a5a5ff;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.link-button:hover {
+  color: #c4c4ff;
+  text-decoration: underline;
+}
+
+.link-button.muted {
+  color: #9a9aa2;
+}
+
+.link-button.forgot {
+  align-self: flex-end;
+}
+
+/* ---------- Submit ---------- */
+.auth-submit {
+  height: 46px;
+  margin-top: 6px;
+  background: linear-gradient(135deg, #6d6dff 0%, #8b5cf6 100%);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(109, 109, 255, 0.3);
+  transition: filter 0.15s, transform 0.1s;
+}
+
+.auth-submit:hover {
+  filter: brightness(1.08);
+}
+
+.auth-submit:active {
+  transform: scale(0.99);
+}
+
+/* ---------- Footer ---------- */
+.auth-switch {
+  margin: 18px 0 0;
+  color: #9a9aa2;
+  font-size: 14px;
+  text-align: center;
+}
+
+.auth-switch .link-button {
+  font-size: 14px;
+}
+
+.auth-terms {
+  margin: 14px 0 0;
+  color: #6e6e76;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.auth-terms a {
+  color: #9a9aa2;
+}
+
+.auth-terms a:hover {
+  color: #ececec;
+}
+
+/* ---------- Keyboard focus ---------- */
+.google-button:focus-visible,
+.segment:focus-visible,
+.auth-submit:focus-visible,
+.link-button:focus-visible,
+.field-action:focus-visible {
+  outline: 2px solid #7c7cff;
+  outline-offset: 2px;
+}
