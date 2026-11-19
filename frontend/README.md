@@ -1,32 +1,130 @@
-# React + TypeScript + Vite
+# Boot AI – Chatbot Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Boot AI is a ChatGPT-style chatbot web app. This folder holds the **frontend** (the part you see in the browser), built with **React**, **TypeScript** and **Vite**.
 
-Currently, two official plugins are available:
+> **Note:** The frontend is not connected to a backend yet. When you send a message, the bot answers with a placeholder reply. The Python backend will provide real answers later.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## What the chatbot does
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Feature | What it does |
+|---|---|
+| **Chat window** | Type a message and press **Enter** to send. **Shift + Enter** adds a new line. |
+| **Suggestions** | On an empty chat, click a suggestion such as "Debug my code" to start quickly. |
+| **Typing indicator** | Shows that Boot AI is "typing" while it prepares a reply. |
+| **New chat** | Click **New chat** in the sidebar to start a fresh conversation. |
+| **Recent chats** | The sidebar lists your past chats, newest first. Click one to reopen it. The first message becomes the chat title. |
+| **Delete chat** | Delete a chat from the sidebar. A confirm popup asks before deleting. |
+| **Saved chats** | Chats are saved in your browser's `localStorage`, so they stay after you refresh the page. |
+| **Login / Sign up** | Click the profile button at the bottom of the sidebar to open the login popup. It supports Google, email + password, and phone + verification code. *(Screens only for now; no real sign-in yet.)* |
 
-## Expanding the Oxlint configuration
+The **Library**, **Plugins**, **Settings** and **Help** buttons are placeholders for future features.
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+---
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+## Project structure
+
+```
+frontend/
+├── index.html              # The HTML page the app loads into
+├── package.json            # Project info, dependencies and npm scripts
+├── vite.config.ts          # Vite settings
+├── public/                 # Static files (favicon, icons)
+└── src/
+    ├── main.tsx            # Starting point – loads <App />
+    ├── App.tsx             # Main layout: sidebar + chat + popups
+    ├── chat/
+    │   ├── chat.tsx            # Chat screen: messages, input box, suggestions
+    │   └── useConversations.ts # Stores chats, sends messages, saves to localStorage
+    ├── sidebar/
+    │   └── sidebar.tsx         # Left menu: new chat, recent chats, profile
+    ├── login/
+    │   └── loginmodal.tsx      # Login / sign-up popup
+    └── popup/
+        ├── popup.tsx           # Reusable popup window
+        └── confirmdialog.tsx   # "Are you sure?" dialog
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+---
+
+## How to run it in the browser
+
+### 1. Install the requirements
+
+- **Node.js** version **20.19 or newer** (version 22 LTS recommended). npm comes with Node.js.
+- Check what you have:
+
+  ```bash
+  node -v
+  npm -v
+  ```
+
+  If Node.js is missing or too old, download it from https://nodejs.org.
+
+### 2. Get the code
+
+```bash
+git clone https://github.com/newaigen32/bootai.git
+cd bootai
+git checkout feature/backend
+cd frontend
+```
+
+### 3. Install the packages
+
+```bash
+npm install
+```
+
+This downloads everything listed in `package.json` into a `node_modules` folder. You only need to run it once, and again whenever `package.json` changes.
+
+### 4. Start the app
+
+```bash
+npm run dev
+```
+
+You will see output like this:
+
+```
+  VITE  ready in 300 ms
+
+  ➜  Local:   http://localhost:5173/
+```
+
+Open **http://localhost:5173** in your browser. Boot AI is now running.
+
+When you save a code change, the page updates by itself. To stop the server, press **Ctrl + C** in the terminal.
+
+---
+
+## All npm commands
+
+| Command | What it does |
+|---|---|
+| `npm install` | Installs all the packages the project needs. |
+| `npm run dev` | Starts the development server at http://localhost:5173 with live reload. |
+| `npm run build` | Checks the TypeScript code, then creates an optimized production build in the `dist/` folder. |
+| `npm run preview` | Serves the `dist/` build locally (at http://localhost:4173) so you can test it before deploying. Run `npm run build` first. |
+| `npm run lint` | Checks the code for mistakes and style problems using Oxlint. |
+
+---
+
+## Troubleshooting
+
+- **`npm: command not found`**: Node.js is not installed. Install it from https://nodejs.org and open a new terminal.
+- **Port 5173 is already in use**: Vite picks the next free port (for example 5174). Use the address shown in the terminal.
+- **Clear all saved chats**: open the browser's DevTools (F12) → **Application** → **Local Storage** → delete the `bootai.conversations` key.
+
+---
+
+## Next step: connect the backend
+
+The placeholder reply lives in `src/chat/useConversations.ts`, inside the `sendMessage` function. Look for the comment:
+
+```ts
+// UI only — replace this with a call to your chatbot API
+```
+
+When the backend is ready, replace that timer with a `fetch()` call to the backend API, and show its answer as the bot message.
