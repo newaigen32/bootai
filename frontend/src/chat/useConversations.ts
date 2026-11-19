@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { sendChatMessage } from '../api/chatApi'
 
 export type Message = {
   id: string
@@ -15,7 +16,7 @@ export type Conversation = {
 
 const STORAGE_KEY = 'bootai.conversations'
 const TITLE_MAX_LENGTH = 40
-const FAKE_REPLY_DELAY_MS = 900
+const ERROR_REPLY = "Sorry, I couldn't reach the Boot AI server. Make sure the backend is running and try again."
 
 function loadConversations(): Conversation[] {
   try {
@@ -45,19 +46,20 @@ function newMessage(role: Message['role'], text: string): Message {
   return { id: crypto.randomUUID(), role, text }
 }
 
-/** Holds all chats, the open chat, and a placeholder bot reply (UI only). */
+/** Holds all chats, the open chat, and gets bot replies from the backend. */
 export function useConversations() {
   const [conversations, setConversations] = useState<Conversation[]>(loadConversations)
   const [activeId, setActiveId] = useState<string | null>(null)
   const [typingIds, setTypingIds] = useState<string[]>([])
-  const replyTimers = useRef(new Map<string, number>())
+  // Requests still waiting for a reply, so they can be cancelled
+  const pendingRequests = useRef(new Map<string, AbortController>())
 
   useEffect(() => saveConversations(conversations), [conversations])
 
-  // Clear pending fake replies on unmount
+  // Cancel waiting requests on unmount
   useEffect(() => {
-    const timers = replyTimers.current
-    return () => timers.forEach((timer) => window.clearTimeout(timer))
+    const requests = pendingRequests.current
+    return () => requests.forEach((controller) => controller.abort())
   }, [])
 
   const sortedConversations = [...conversations].sort((a, b) => b.updatedAt - a.updatedAt)
@@ -98,21 +100,26 @@ export function useConversations() {
     const id = conversationId
     setTypingIds((prev) => [...prev, id])
 
-    // UI only — replace this with a call to your chatbot API
-    const timer = window.setTimeout(() => {
-      appendMessage(
-        id,
-        newMessage('bot', 'This is a placeholder reply. Connect the backend to get real answers.'),
-      )
-      setTypingIds((prev) => prev.filter((typingId) => typingId !== id))
-      replyTimers.current.delete(id)
-    }, FAKE_REPLY_DELAY_MS)
-    replyTimers.current.set(id, timer)
+    // Ask the backend for a reply (see src/api/chatApi.ts)
+    const controller = new AbortController()
+    pendingRequests.current.set(id, controller)
+
+    sendChatMessage(trimmed, controller.signal)
+      .then((reply) => appendMessage(id, newMessage('bot', reply)))
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return // chat was deleted — ignore
+        console.error('Chat request failed:', error)
+        appendMessage(id, newMessage('bot', ERROR_REPLY))
+      })
+      .finally(() => {
+        if (pendingRequests.current.get(id) === controller) pendingRequests.current.delete(id)
+        setTypingIds((prev) => prev.filter((typingId) => typingId !== id))
+      })
   }
 
   function deleteConversation(id: string) {
-    window.clearTimeout(replyTimers.current.get(id))
-    replyTimers.current.delete(id)
+    pendingRequests.current.get(id)?.abort()
+    pendingRequests.current.delete(id)
     setTypingIds((prev) => prev.filter((typingId) => typingId !== id))
     setConversations((prev) => prev.filter((c) => c.id !== id))
     if (activeId === id) setActiveId(null)
