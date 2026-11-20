@@ -1,7 +1,11 @@
 # Boot AI – Backend
 
 A small **Python FastAPI** server for the Boot AI chat UI.
-For now it sends back simple replies (for example, "hi" → "Hello! I'm Boot AI…"). An AI model will be added later.
+It gets its answers from an AI model (**llama3.2**) running on your computer with **Ollama**.
+
+```
+UI (port 5173)  →  this backend (port 8000)  →  Ollama (port 11434)  →  llama3.2
+```
 
 ## Project structure
 
@@ -17,16 +21,26 @@ backend/
     ├── config.py           # Settings read from .env
     ├── health/
     │   └── routes.py       # GET /api/health – is the server running?
-    └── chat/
-        ├── routes.py       # POST /api/chat – receives the message, returns the reply
-        ├── schemas.py      # Shape of the request and response data
-        └── service.py      # The reply logic (later: calls the AI model)
+    ├── chat/
+    │   ├── routes.py       # POST /api/chat – receives the message, returns the reply
+    │   ├── schemas.py      # Shape of the request and response data
+    │   └── service.py      # Adds Boot AI's instructions (system prompt) and asks the model
+    └── llm/
+        └── ollama.py       # Calls Ollama's API (like frontend's src/api/chatApi.ts)
 ```
 
 **How a message flows:**
-`routes.py` receives `{"message": "hi"}` → `schemas.py` checks it → `service.py` makes the reply → `routes.py` sends back `{"reply": "..."}`
+`routes.py` receives `{"message": "hi"}` → `schemas.py` checks it → `service.py` adds the system prompt → `ollama.py` asks the model → `routes.py` sends back `{"reply": "..."}`
 
 The `__init__.py` files are empty. They just tell Python "this folder is a package", so files can import each other.
+
+## Before you start: Ollama
+
+1. Install Ollama from https://ollama.com/download
+2. Download the model: `ollama pull llama3.2`
+3. Check it works: open http://localhost:11434 → "Ollama is running"
+
+To use a different model, run `ollama pull <model>` and set `OLLAMA_MODEL=<model>` in `.env`, then restart the backend.
 
 ## Run it on your computer (Windows)
 
@@ -69,14 +83,12 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 - Try the chat: open **http://localhost:8000/docs**, click **POST /api/chat** → **Try it out**, send:
 
   ```json
-  { "message": "hi" }
+  { "message": "What is Docker?" }
   ```
 
-  You should get:
+  You get the model's answer in `reply`. The first answer can take a few seconds while the model loads.
 
-  ```json
-  { "reply": "Hello! I'm Boot AI. How can I help you today?" }
-  ```
+- If Ollama isn't running or the model isn't downloaded, you get status **503** with the reason in `detail`.
 
 ## API
 
@@ -85,4 +97,5 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 | | Body |
 |---|---|
 | Request | `{ "message": "hi" }` |
-| Response | `{ "reply": "Hello! I'm Boot AI. How can I help you today?" }` |
+| Response | `{ "reply": "<the model's answer>" }` |
+| Error | `503` with `{ "detail": "<reason>" }` when Ollama can't answer |

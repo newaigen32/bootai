@@ -1,22 +1,22 @@
 """
 Chat logic – decides what the bot replies.
 
-For now these are simple fixed replies.
-Later, this is the file where we will call the AI model.
+It adds Boot AI's instructions (the "system prompt") to the user's message
+and asks the AI model for an answer.
 """
 
-GREETINGS = {"hi", "hii", "hello", "hey", "good morning", "good afternoon", "good evening"}
-GOODBYES = {"bye", "goodbye"}
+from app.llm.ollama import ask_ollama
+
+# Instructions the model reads before every message. Change these to change Boot AI's behaviour.
+SYSTEM_PROMPT = (
+    "You are Boot AI, a friendly and helpful assistant. "
+    "Give clear, simple answers. If you are not sure about something, say so."
+)
 
 
-def make_reply(message: str) -> str:
-    text = message.lower().strip(" !.?")
-
-    if text in GREETINGS:
-        return "Hello! I'm Boot AI. How can I help you today?"
-    if text in GOODBYES:
-        return "Goodbye! Have a great day."
-    if "your name" in text:
-        return "My name is Boot AI."
-
-    return f'You said: "{message}". I\'m not connected to an AI model yet, but the backend is working!'
+async def make_reply(message: str) -> str:
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": message},
+    ]
+    return await ask_ollama(messages)
